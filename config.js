@@ -13,31 +13,39 @@ const CONFIG = {
     // Auto-refresh interval in milliseconds (5 minutes)
     REFRESH_INTERVAL: 5 * 60 * 1000,
     
-    // Column mapping from Google Form
+    // Column mapping from Google Form (updated to match actual form structure)
     COLUMNS: {
-        timestamp: 0,      // Timestamp column
-        company: 1,        // Company name
-        position: 2,       // Position title
-        location: 3,       // City/Location
-        department: 4,     // Department
-        description: 5,    // Job description
-        requirements: 6,   // Requirements
-        experience: 7,     // Experience level
-        contract: 8,       // Contract type
-        salary: 9,         // Salary range
-        url: 10           // Application URL (optional)
+        timestamp: 0,           // Timestamp column
+        email: 1,               // Email address
+        company: 2,             // Company name
+        position: 3,            // Job Title
+        employmentType: 4,      // Employment Type
+        workLocation: 5,        // Work Location Model
+        description: 6,         // Job Description
+        requirements: 7,        // Required Skills and Qualifications
+        experience: 8,          // Years of Experience Required
+        salary: 9,              // Salary Range (Annual)
+        deadline: 10,           // Application Deadline
+        materials: 11,          // Required Application Materials
+        urgency: 12,            // Urgency rating
+        url: 13,                // Application link
+        location: 14            // Location
     }
 };
 
 // Expected form fields in order:
 // 1. Timestamp (auto)
-// 2. Nombre de la Empresa
-// 3. Posición
-// 4. Ciudad
-// 5. Departamento
-// 6. Descripción del Puesto
-// 7. Requisitos
-// 8. Nivel de Experiencia
-// 9. Tipo de Contrato
-// 10. Rango Salarial
-// 11. URL de Aplicación (opcional)
+// 2. Email address
+// 3. Company Name
+// 4. Job Title
+// 5. Employment Type
+// 6. Work Location Model
+// 7. Job Description
+// 8. Required Skills and Qualifications
+// 9. Years of Experience Required
+// 10. Salary Range (Annual)
+// 11. Application Deadline
+// 12. Required Application Materials
+// 13. Urgency rating
+// 14. Application link
+// 15. Location
