@@ -65,21 +65,32 @@ class TalentBoard {
         // Skip header row
         for (let i = 1; i < lines.length; i++) {
             const fields = this.parseCSVLine(lines[i]);
-            if (fields.length >= 6 && fields[1]) {
-                // Skip empty rows
+            
+            // Validate: must have minimum fields and company name must exist
+            if (fields.length >= 15 && fields[2]) {
+                // Skip empty rows - check if company and position are filled
+                const company = fields[CONFIG.COLUMNS.company]?.trim();
+                const position = fields[CONFIG.COLUMNS.position]?.trim();
+                
+                if (!company || !position) {
+                    continue; // Skip incomplete entries
+                }
+                
                 const job = {
                     id: i,
                     timestamp: fields[CONFIG.COLUMNS.timestamp] || '',
-                    company: fields[CONFIG.COLUMNS.company] || 'Company Name',
-                    position: fields[CONFIG.COLUMNS.position] || 'Position',
-                    location: fields[CONFIG.COLUMNS.location] || 'Location',
-                    department: fields[CONFIG.COLUMNS.department] || 'Department',
-                    description: fields[CONFIG.COLUMNS.description] || 'No description provided',
-                    requirements: fields[CONFIG.COLUMNS.requirements] || '',
-                    experience: fields[CONFIG.COLUMNS.experience] || 'Not specified',
-                    contract: fields[CONFIG.COLUMNS.contract] || 'Full-time',
-                    salary: fields[CONFIG.COLUMNS.salary] || 'Competitive',
-                    url: fields[CONFIG.COLUMNS.url] || '#'
+                    company: company,
+                    position: position,
+                    location: fields[CONFIG.COLUMNS.location]?.trim() || 'Remote',
+                    employmentType: fields[CONFIG.COLUMNS.employmentType]?.trim() || 'Full-time',
+                    workLocation: fields[CONFIG.COLUMNS.workLocation]?.trim() || 'On-site',
+                    description: fields[CONFIG.COLUMNS.description]?.trim() || 'No description provided',
+                    requirements: fields[CONFIG.COLUMNS.requirements]?.trim() || '',
+                    experience: fields[CONFIG.COLUMNS.experience]?.trim() || 'Not specified',
+                    salary: fields[CONFIG.COLUMNS.salary]?.trim() || 'Competitive',
+                    deadline: fields[CONFIG.COLUMNS.deadline]?.trim() || '',
+                    urgency: fields[CONFIG.COLUMNS.urgency]?.trim() || '',
+                    url: fields[CONFIG.COLUMNS.url]?.trim() || '#'
                 };
                 jobs.push(job);
             }
@@ -121,7 +132,7 @@ class TalentBoard {
 
         this.jobs.forEach(job => {
             this.locations.add(job.location);
-            this.departments.add(job.department);
+            this.departments.add(job.employmentType);
         });
 
         this.updateSelectOptions('locationFilter', Array.from(this.locations));
@@ -153,7 +164,7 @@ class TalentBoard {
 
         this.filteredJobs = this.jobs.filter(job => {
             const locationMatch = !locationFilter || job.location === locationFilter;
-            const departmentMatch = !departmentFilter || job.department === departmentFilter;
+            const departmentMatch = !departmentFilter || job.employmentType === departmentFilter;
             return locationMatch && departmentMatch;
         });
 
@@ -197,11 +208,11 @@ class TalentBoard {
                 </div>
                 <div class="job-info">
                     <span class="job-info-icon">💼</span>
-                    <span>${this.escapeHtml(job.department)}</span>
+                    <span>${this.escapeHtml(job.employmentType)}</span>
                 </div>
                 <div class="job-info">
-                    <span class="job-info-icon">⏱️</span>
-                    <span>${this.escapeHtml(job.contract)}</span>
+                    <span class="job-info-icon">🏢</span>
+                    <span>${this.escapeHtml(job.workLocation)}</span>
                 </div>
                 <div class="job-description">${this.escapeHtml(job.description.substring(0, 150))}${job.description.length > 150 ? '...' : ''}</div>
                 <div class="job-tags">
@@ -219,9 +230,10 @@ class TalentBoard {
 
     getJobTags(job) {
         const tags = [];
-        if (job.experience) tags.push(job.experience);
-        if (job.salary && job.salary !== 'Competitive') tags.push(job.salary);
-        return tags.slice(0, 2); // Show max 2 tags
+        if (job.experience && job.experience !== 'Not specified') tags.push(job.experience);
+        if (job.salary && job.salary !== 'Competitive' && job.salary !== 'undisclosed') tags.push(job.salary);
+        if (job.urgency) tags.push(`Urgency: ${job.urgency}`);
+        return tags.slice(0, 3); // Show max 3 tags
     }
 
     updateStats() {
@@ -300,12 +312,14 @@ class TalentBoard {
                 company: 'MediCare Plus',
                 position: 'Enfermero/a Especialista',
                 location: 'Barcelona',
-                department: 'Enfermería',
+                employmentType: 'Full-time',
+                workLocation: 'On-site',
                 description: 'Buscamos enfermero/a especialista en cuidados intensivos con experiencia en hospitales de referencia.',
                 requirements: 'Titulación en Enfermería, Experiencia +3 años',
                 experience: 'Senior',
-                contract: 'Tiempo completo',
                 salary: '€2.200 - €2.500',
+                deadline: '',
+                urgency: '',
                 url: 'https://www.medicareplus.es/careers'
             },
             {
@@ -314,12 +328,14 @@ class TalentBoard {
                 company: 'Clínica Dental Smile',
                 position: 'Dentista Junior',
                 location: 'Madrid',
-                department: 'Odontología',
+                employmentType: 'Full-time',
+                workLocation: 'On-site',
                 description: 'Se requiere dentista recién graduado para unirse a nuestro equipo dinámico en la clínica central.',
                 requirements: 'Licenciado en Odontología, Colegiado',
                 experience: 'Junior',
-                contract: 'Tiempo completo',
                 salary: '€1.800 - €2.100',
+                deadline: '',
+                urgency: '',
                 url: 'https://www.clinicasmile.es/empleo'
             },
             {
@@ -328,12 +344,14 @@ class TalentBoard {
                 company: 'Farmacia Central López',
                 position: 'Farmacéutico/a',
                 location: 'Málaga',
-                department: 'Farmacia',
+                employmentType: 'Part-time',
+                workLocation: 'On-site',
                 description: 'Farmacéutico para trabajar en dispensario y atención farmacéutica clínica.',
                 requirements: 'Grado en Farmacia, Experiencia +2 años',
                 experience: 'Mid-level',
-                contract: 'Tiempo parcial',
                 salary: '€1.600 - €1.900',
+                deadline: '',
+                urgency: '',
                 url: ''
             }
         ];
