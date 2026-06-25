@@ -37,6 +37,11 @@
             <p>Cargando posiciones disponibles...</p>
         </div>
 
+        <!-- Post Job Button -->
+        <div id="actionBar" class="action-bar" style="display: none;">
+            <button id="postJobBtn" class="post-job-btn">➕ Publicar Oferta de Empleo</button>
+        </div>
+
         <!-- Filters -->
         <div id="filters" class="filters" style="display: none;">
             <div class="filter-group">
@@ -46,9 +51,9 @@
                 </select>
             </div>
             <div class="filter-group">
-                <label for="departmentFilter">💼 Departamento:</label>
-                <select id="departmentFilter">
-                    <option value="">Todos los departamentos</option>
+                <label for="employmentTypeFilter">💼 Tipo de Empleo:</label>
+                <select id="employmentTypeFilter">
+                    <option value="">Todos los tipos</option>
                 </select>
             </div>
             <button id="refreshBtn" class="refresh-btn">🔄 Actualizar</button>
@@ -78,7 +83,7 @@
         <!-- No Results -->
         <div id="noResults" class="no-results" style="display: none;">
             <p>No hay posiciones disponibles en este momento.</p>
-            <small>Por favor, intenta de nuevo más tarde.</small>
+            <small>¡Sé el primero en publicar una oferta!</small>
         </div>
 
         <!-- Error Message -->
@@ -87,13 +92,158 @@
         </div>
     </main>
 
+    <!-- Post Job Modal Form -->
+    <div id="jobFormModal" class="job-form-modal" style="display: none;">
+        <div class="job-form-content">
+            <button class="form-close-btn">&times;</button>
+            <h2>Publicar Oferta de Empleo</h2>
+            <p class="form-subtitle">Por favor, completa los siguientes datos para publicar tu oferta de empleo</p>
+            
+            <form id="jobForm" class="job-form">
+                <!-- Row 1: Company Name & Job Title -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="companyName">Nombre de la Empresa *</label>
+                        <input type="text" id="companyName" name="companyName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobTitle">Título del Puesto *</label>
+                        <input type="text" id="jobTitle" name="jobTitle" required>
+                    </div>
+                </div>
+
+                <!-- Row 2: Employment Type & Work Location -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="employmentType">Tipo de Empleo *</label>
+                        <select id="employmentType" name="employmentType" required>
+                            <option value="">Selecciona...</option>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Contract">Contract</option>
+                            <option value="Freelance">Freelance</option>
+                            <option value="Internship">Internship</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="workLocation">Modelo de Ubicación de Trabajo *</label>
+                        <select id="workLocation" name="workLocation" required>
+                            <option value="">Selecciona...</option>
+                            <option value="On-site">On-site</option>
+                            <option value="Remote">Remote</option>
+                            <option value="Hybrid">Hybrid</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Row 3: Location & Experience -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="location">Ubicación *</label>
+                        <input type="text" id="location" name="location" placeholder="ej: Barcelona, Madrid, Málaga" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="experience">Años de Experiencia Requerida *</label>
+                        <select id="experience" name="experience" required>
+                            <option value="">Selecciona...</option>
+                            <option value="0-1 years">0-1 años</option>
+                            <option value="1-3 years">1-3 años</option>
+                            <option value="3-5 years">3-5 años</option>
+                            <option value="5-8 years">5-8 años</option>
+                            <option value="8+ years">8+ años</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Row 4: Job Description -->
+                <div class="form-group">
+                    <label for="description">Descripción del Puesto *</label>
+                    <textarea id="description" name="description" rows="5" placeholder="Describe el rol, responsabilidades y ambiente de trabajo..." required></textarea>
+                </div>
+
+                <!-- Row 5: Requirements -->
+                <div class="form-group">
+                    <label for="requirements">Habilidades y Cualificaciones Requeridas *</label>
+                    <textarea id="requirements" name="requirements" rows="4" placeholder="Lista las habilidades técnicas, blandas y experiencia necesaria..." required></textarea>
+                </div>
+
+                <!-- Row 6: Salary & Deadline -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="salary">Rango Salarial Anual *</label>
+                        <input type="text" id="salary" name="salary" placeholder="ej: €25,000 - €35,000" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="deadline">Fecha Límite de Solicitud</label>
+                        <input type="date" id="deadline" name="deadline">
+                    </div>
+                </div>
+
+                <!-- Row 7: Application Materials & Urgency -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Materiales de Solicitud Requeridos *</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="materials" value="Resume/CV" checked> Resume/CV
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="materials" value="Cover Letter"> Cover Letter
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="materials" value="Portfolio"> Portfolio
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="materials" value="LinkedIn Profile Link"> LinkedIn Profile Link
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="materials" value="References"> References
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="urgency">¿Qué tan urgente es esta necesidad de contratación? *</label>
+                        <div class="urgency-scale">
+                            <label class="radio-label">
+                                <input type="radio" name="urgency" value="1"> Not Urgent
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="urgency" value="2"> 2
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="urgency" value="3"> 3
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="urgency" value="4"> 4
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="urgency" value="5"> Immediate Need
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 8: Application Link -->
+                <div class="form-group">
+                    <label for="applicationLink">Enlace de Solicitud *</label>
+                    <input type="url" id="applicationLink" name="applicationLink" placeholder="https://example.com/apply" required>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-actions">
+                    <button type="button" id="formCancelBtn" class="btn-cancel">Cancelar</button>
+                    <button type="submit" class="btn-submit">Publicar Oferta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <p>Health Hub Talent Board - Conectando talento con oportunidades</p>
         <p class="footer-small">Última actualización: <span id="footerTime">-</span></p>
     </footer>
 
-    <script src="config.js"></script>
-    <script src="script.js"></script>
+    <script src="script-new.js"></script>
 </body>
 </html>
