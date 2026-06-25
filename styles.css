@@ -105,6 +105,34 @@ html, body {
 }
 
 /* ==========================================
+   ACTION BAR
+   ========================================== */
+
+.action-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.post-job-btn {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+}
+
+.post-job-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* ==========================================
    LOADING STATE
    ========================================== */
 
@@ -198,10 +226,6 @@ html, body {
 .refresh-btn:hover {
     background-color: var(--primary-dark);
     transform: scale(1.05);
-}
-
-.refresh-btn:active {
-    transform: scale(0.95);
 }
 
 /* ==========================================
@@ -306,28 +330,31 @@ html, body {
     color: var(--primary-color);
 }
 
-.job-description {
-    color: var(--text-dark);
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 16px;
-    flex-grow: 1;
-}
-
-.job-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
-}
-
-.job-tag {
-    background-color: var(--primary-light);
-    color: var(--primary-color);
-    padding: 4px 12px;
+.job-urgency {
+    display: inline-block;
+    padding: 6px 12px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 600;
+    margin-top: 8px;
+    width: fit-content;
+}
+
+.job-urgency.urgency-1,
+.job-urgency.urgency-2 {
+    background-color: #D5F4E6;
+    color: #27AE60;
+}
+
+.job-urgency.urgency-3 {
+    background-color: #FCF3CF;
+    color: #F39C12;
+}
+
+.job-urgency.urgency-4,
+.job-urgency.urgency-5 {
+    background-color: #FADBD8;
+    color: #E74C3C;
 }
 
 .job-card-footer {
@@ -344,31 +371,222 @@ html, body {
     color: var(--text-light);
 }
 
-.job-link-btn {
-    background-color: var(--primary-color);
-    color: var(--white);
+.job-card-delete-btn {
+    background: none;
     border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-weight: 600;
+    font-size: 16px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.job-link-btn:hover:not(:disabled) {
-    background-color: var(--primary-dark);
-    transform: scale(1.05);
-}
-
-.job-link-btn:disabled {
     opacity: 0.6;
-    cursor: not-allowed;
+    transition: opacity 0.3s ease;
+}
+
+.job-card-delete-btn:hover {
+    opacity: 1;
 }
 
 /* ==========================================
-   JOB MODAL
+   JOB FORM MODAL
+   ========================================== */
+
+.job-form-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.job-form-content {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 40px;
+    max-width: 700px;
+    width: 100%;
+    box-shadow: var(--shadow-hover);
+    animation: slideUp 0.3s ease;
+    position: relative;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 32px;
+    cursor: pointer;
+    color: var(--text-light);
+    transition: color 0.3s ease;
+    width: 40px;
+    height: 40px;
+}
+
+.form-close-btn:hover {
+    color: var(--primary-color);
+}
+
+.job-form-content h2 {
+    font-size: 28px;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.form-subtitle {
+    color: var(--text-light);
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.job-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-row.full {
+    grid-template-columns: 1fr;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 10px 12px;
+    border: 2px solid #ECECF1;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.checkbox-group,
+.urgency-scale {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkbox-label,
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-dark);
+    cursor: pointer;
+}
+
+.checkbox-label input,
+.radio-label input {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-color);
+}
+
+.urgency-scale {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.radio-label {
+    flex: 0 0 auto;
+    margin-right: 15px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: flex-end;
+}
+
+.btn-submit,
+.btn-cancel {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: var(--white);
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-cancel {
+    background-color: #ECEFF1;
+    color: var(--text-dark);
+}
+
+.btn-cancel:hover {
+    background-color: #CFD8DC;
+}
+
+/* ==========================================
+   JOB MODAL (DETAILS)
    ========================================== */
 
 .job-modal {
@@ -379,16 +597,12 @@ html, body {
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+    z-index: 1500;
     align-items: center;
     justify-content: center;
     padding: 20px;
+    overflow-y: auto;
     animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
 }
 
 .job-modal-content {
@@ -402,17 +616,6 @@ html, body {
     position: relative;
     box-shadow: var(--shadow-hover);
     animation: slideUp 0.3s ease;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .job-modal-close {
@@ -492,14 +695,37 @@ html, body {
     text-align: center;
 }
 
-.job-apply-btn:hover:not(:disabled) {
+.job-apply-btn:hover {
     background-color: var(--primary-dark);
     transform: scale(1.05);
 }
 
-.job-apply-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+/* ==========================================
+   SUCCESS MESSAGE
+   ========================================== */
+
+.success-message {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #27AE60;
+    color: var(--white);
+    padding: 16px 24px;
+    border-radius: 6px;
+    box-shadow: var(--shadow-hover);
+    animation: slideInUp 0.3s ease;
+    z-index: 3000;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ==========================================
@@ -604,6 +830,14 @@ html, body {
         grid-template-columns: 1fr;
     }
 
+    .job-form-content {
+        padding: 30px 20px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
     .job-modal-content {
         padding: 30px 20px;
         max-height: 95vh;
@@ -611,6 +845,14 @@ html, body {
 
     .job-modal-content h2 {
         font-size: 22px;
+    }
+
+    .urgency-scale {
+        flex-direction: column;
+    }
+
+    .radio-label {
+        margin-right: 0;
     }
 }
 
