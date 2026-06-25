@@ -50,9 +50,10 @@ class TalentBoard {
             if (!response.ok) throw new Error('Failed to fetch data');
 
             const csv = await response.text();
-            console.log('CSV Data:', csv.substring(0, 500)); // Log first 500 chars
+            console.log('CSV Data first 1000 chars:', csv.substring(0, 1000));
             const jobs = this.parseCSV(csv);
-            console.log('Parsed jobs count:', jobs.length);
+            console.log('Final parsed jobs count:', jobs.length);
+            console.log('Jobs:', jobs);
             return jobs;
         } catch (error) {
             console.error('Error fetching Google Sheet:', error);
@@ -64,46 +65,50 @@ class TalentBoard {
         const lines = csv.trim().split('\n');
         const jobs = [];
 
-        console.log('Total lines:', lines.length);
+        console.log('Total lines in CSV:', lines.length);
 
-        // Skip header row
+        // Skip header row (line 0)
         for (let i = 1; i < lines.length; i++) {
             const fields = this.parseCSVLine(lines[i]);
             
-            // Validate: must have minimum fields
-            if (fields.length >= 3) {
-                // Check if company and position are filled
-                const company = fields[CONFIG.COLUMNS.company]?.trim();
-                const position = fields[CONFIG.COLUMNS.position]?.trim();
-                
-                console.log(`Row ${i}: company="${company}", position="${position}"`);
-                
-                if (!company || !position) {
-                    console.log(`Skipping row ${i}: missing company or position`);
-                    continue;
-                }
-                
-                const job = {
-                    id: i,
-                    timestamp: fields[CONFIG.COLUMNS.timestamp] || '',
-                    company: company,
-                    position: position,
-                    location: fields[CONFIG.COLUMNS.location]?.trim() || 'Remote',
-                    employmentType: fields[CONFIG.COLUMNS.employmentType]?.trim() || 'Full-time',
-                    workLocation: fields[CONFIG.COLUMNS.workLocation]?.trim() || 'On-site',
-                    description: fields[CONFIG.COLUMNS.description]?.trim() || 'No description provided',
-                    requirements: fields[CONFIG.COLUMNS.requirements]?.trim() || '',
-                    experience: fields[CONFIG.COLUMNS.experience]?.trim() || 'Not specified',
-                    salary: fields[CONFIG.COLUMNS.salary]?.trim() || 'Competitive',
-                    deadline: fields[CONFIG.COLUMNS.deadline]?.trim() || '',
-                    urgency: fields[CONFIG.COLUMNS.urgency]?.trim() || '',
-                    url: fields[CONFIG.COLUMNS.url]?.trim() || '#'
-                };
-                jobs.push(job);
-                console.log('Added job:', job.company, job.position);
+            // Only process rows with enough fields
+            if (fields.length < 15) {
+                console.log(`Row ${i}: Skipping - not enough fields (${fields.length})`);
+                continue;
             }
+            
+            // Extract key fields
+            const company = fields[CONFIG.COLUMNS.company]?.trim();
+            const position = fields[CONFIG.COLUMNS.position]?.trim();
+            
+            // STRICT VALIDATION: Both company AND position must be present and non-empty
+            if (!company || company.length === 0 || !position || position.length === 0) {
+                console.log(`Row ${i}: Skipping - missing company or position`);
+                continue;
+            }
+            
+            const job = {
+                id: i,
+                timestamp: fields[CONFIG.COLUMNS.timestamp]?.trim() || '',
+                company: company,
+                position: position,
+                location: fields[CONFIG.COLUMNS.location]?.trim() || 'Remote',
+                employmentType: fields[CONFIG.COLUMNS.employmentType]?.trim() || 'Full-time',
+                workLocation: fields[CONFIG.COLUMNS.workLocation]?.trim() || 'On-site',
+                description: fields[CONFIG.COLUMNS.description]?.trim() || 'No description provided',
+                requirements: fields[CONFIG.COLUMNS.requirements]?.trim() || '',
+                experience: fields[CONFIG.COLUMNS.experience]?.trim() || 'Not specified',
+                salary: fields[CONFIG.COLUMNS.salary]?.trim() || 'Competitive',
+                deadline: fields[CONFIG.COLUMNS.deadline]?.trim() || '',
+                urgency: fields[CONFIG.COLUMNS.urgency]?.trim() || '',
+                url: fields[CONFIG.COLUMNS.url]?.trim() || '#'
+            };
+            
+            jobs.push(job);
+            console.log(`✓ Row ${i} ADDED: ${job.company} - ${job.position}`);
         }
 
+        console.log('TOTAL VALID JOBS:', jobs.length);
         return jobs.reverse(); // Show newest first
     }
 
