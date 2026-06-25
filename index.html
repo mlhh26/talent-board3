@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Hub - Talent Board</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header with Logo -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <svg class="logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Health Hub Logo - Orange Heart -->
+                    <circle cx="100" cy="100" r="95" fill="none" stroke="#FF6B35" stroke-width="2"/>
+                    <path d="M100,60 Q85,45 70,60 Q60,70 70,85 L100,115 L130,85 Q140,70 130,60 Q115,45 100,60 Z" fill="#FF6B35"/>
+                    <path d="M130,60 Q145,45 160,60 Q170,70 160,85 L130,115 L100,85 L130,60 Z" fill="#FF6B35" opacity="0.8"/>
+                </svg>
+                <div class="header-text">
+                    <h1>Health Hub</h1>
+                    <p>Barcelona • Madrid • Málaga</p>
+                </div>
+            </div>
+            <div class="header-title">
+                <h2>Talent Board</h2>
+                <p>Posiciones Disponibles</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Loading State -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Cargando posiciones disponibles...</p>
+        </div>
+
+        <!-- Filters -->
+        <div id="filters" class="filters" style="display: none;">
+            <div class="filter-group">
+                <label for="locationFilter">📍 Ciudad:</label>
+                <select id="locationFilter">
+                    <option value="">Todas las ciudades</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="departmentFilter">💼 Departamento:</label>
+                <select id="departmentFilter">
+                    <option value="">Todos los departamentos</option>
+                </select>
+            </div>
+            <button id="refreshBtn" class="refresh-btn">🔄 Actualizar</button>
+        </div>
+
+        <!-- Stats -->
+        <div id="stats" class="stats" style="display: none;">
+            <div class="stat-card">
+                <span class="stat-number" id="totalPositions">0</span>
+                <span class="stat-label">Posiciones Disponibles</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="totalCompanies">0</span>
+                <span class="stat-label">Empresas</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="lastUpdated">Nunca</span>
+                <span class="stat-label">Última Actualización</span>
+            </div>
+        </div>
+
+        <!-- Jobs Grid -->
+        <div id="jobsContainer" class="jobs-grid">
+            <!-- Jobs will be loaded here -->
+        </div>
+
+        <!-- No Results -->
+        <div id="noResults" class="no-results" style="display: none;">
+            <p>No hay posiciones disponibles en este momento.</p>
+            <small>Por favor, intenta de nuevo más tarde.</small>
+        </div>
+
+        <!-- Error Message -->
+        <div id="error" class="error" style="display: none;">
+            <p>Error al cargar los datos. Por favor, intenta de nuevo.</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Health Hub Talent Board - Conectando talento con oportunidades</p>
+        <p class="footer-small">Última actualización: <span id="footerTime">-</span></p>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
